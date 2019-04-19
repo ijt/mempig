@@ -1,10 +1,10 @@
 # mempig
 Mempig's only job is to eat up your system's memory so you can find answers to questions like these:
 * How much memory can mempig ask for before it gets killed?
-* Does the system slow to a crawl or lock up completely for large memory requests? 
+* Does the system slow to a crawl or lock up completely for large memory requests?
 * If mempig is running in a container, how much memory can mempig eat before the container crashes?
 
-## Observed behavior on Mac
+## Mac
 
 On my MacBook Pro with 16G of memory, it works fine to ask for 8G:
 ```
@@ -55,9 +55,9 @@ sys     0m0.021s
 ```
 Nope.
 
-## Observed behavior on Linux
+## Ubuntu
 
-On a linux instance on GCE with about 3G of memory, this happens:
+On an Ubuntu instance on GCE with about 3G of memory, this happens:
 
 ```
 issactrotts@memtest:~$ cat /proc/meminfo | head
@@ -125,4 +125,41 @@ runtime.goexit()
         /usr/lib/go-1.7/src/runtime/asm_amd64.s:2086 +0x1 fp=0xc420037fa8 sp=0xc420037fa0
 ```
 
+Now let's see what happens in a docker container on Ubuntu, using a GCE image that supports docker.
+```
+$ gcloud compute instances create memtest2 --image=cos-73-11647-121-0 --image-project=cos-cloud --zone=us-east1-d --machine-type n1-standard-1
+rCreated [https://www.googleapis.com/compute/v1/projects/sourcegraph-server/zones/us-east1-d/instances/memtest2].
+NAME      ZONE        MACHINE\_TYPE   PREEMPTIBLE  INTERNAL\_IP  EXTERNAL\_IP   STATUS
+memtest2  us-east1-d  n1-standard-1               10.142.0.2   34.74.75.205  RUNNING
+$ gcloud compute ssh memtest2
+No zone specified. Using zone [us-east1-d] for instance: [memtest2].
+Warning: Permanently added 'compute.3342904289974829875' (ED25519) to the list of known hosts.
+
+issactrotts@memtest2 ~ $ git clone https://github.com/ijt/mempig
+Cloning into 'mempig'...
+remote: Enumerating objects: 41, done.
+remote: Counting objects: 100% (41/41), done.
+remote: Compressing objects: 100% (33/33), done.
+remote: Total 41 (delta 13), reused 33 (delta 7), pack-reused 0
+Unpacking objects: 100% (41/41), done.
+issactrotts@memtest2 ~ $ cd mempig/
+
+issactrotts@memtest2 ~/mempig $ docker build -t mempig .
+(yadda yadda)
+```
+If we ask for 3G, it works fine:
+```
+issactrotts@memtest2 ~/mempig $ docker run -it --rm --name mp mempig -G 3
+Allocated 3GiB (3221225472 bytes)
+Wallowing in the memory. Press ctrl-C to quit.
+^C
+```
+However, if we ask for 4G, more than is available on the system, the container gets killed after a few seconds:
+```
+issactrotts@memtest2 ~/mempig $ time docker run -it --rm --name mp mempig -G 4
+
+real    0m7.183s
+user    0m0.025s
+sys     0m0.033s
+```
 
