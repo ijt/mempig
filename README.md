@@ -1,11 +1,10 @@
 # mempig
 Mempig's only job is to eat up your system's memory so you can find answers to questions like these:
+* How much memory can mempig ask for before it gets killed?
+* Does the system slow to a crawl or lock up completely for large memory requests? 
+* If mempig is running in a container, how much memory can mempig eat before the container crashes?
 
-Does mempig get killed? Not on my box, outside a container.
-
-Does the system slow to a crawl or lock up completely for large memory requests? The fan runs due to swapping, but it's fine.
-
-If mempig is running in a container, does the container crash? It sure does, beyond 2G, at least on my Mac.
+## Observed behavior on Mac
 
 On my MacBook Pro with 16G of memory, it works fine to ask for 8G:
 ```
