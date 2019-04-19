@@ -15,7 +15,9 @@ func main() {
 	// Apparently it's lazily allocated.
 	for i := 0; i < len(bs); i += *stride {
 		bs[i] = byte(1)
+		fmt.Printf("Allocated %d of %d bytes (%.2f%%)\r", i+1, len(bs), float32(i+1)/float32(len(bs))*100.0)
 	}
+	fmt.Printf("                                                              \r")
 	fmt.Printf("Allocated %dGiB (%d bytes)\n", *G, len(bs))
 	fmt.Println("Wallowing in the memory. Press ctrl-C to quit.")
 	for {
