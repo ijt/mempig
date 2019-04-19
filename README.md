@@ -16,7 +16,7 @@ Wallowing in the memory. Press ctrl-C to quit.
 I tried asking for 100G and that was fine too; it just got the memory by swapping out to disk.
 
 But to my surprise, things changed when I tried running mempig inside a docker container.
-Supposedly, docker containers have their memory limit set to "unlimited" by default,
+Supposedly, [docker containers have their memory limit set to "unlimited" by default](https://docs.docker.com/config/containers/resource_constraints/#--kernel-memory-details),
 so it's natural to assume that running mempig would have the same result there as it
 would outside a container.
 
