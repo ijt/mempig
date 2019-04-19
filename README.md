@@ -55,6 +55,24 @@ sys     0m0.021s
 ```
 Nope.
 
+I'm running Docker Desktop, and it has a little icon at the top right of my screen. Clicking that and then clicking the Preferences menu item that appears, a window came up to configure it. I clicked the Advanced tab and a slider appeared for the memory. Sure enough it was set at 2GiB. I moved it to 8GiB, leaving the Swap slider at 1GiB, and clicked Apply & Restart. Did it help?
+```
+[ ~/src/github.com/ijt/mempig ] time docker run -it --rm --name mp mempig -G 7
+Allocated 7GiB (7516192768 bytes)
+Wallowing in the memory. Press ctrl-C to quit.
+^C
+```
+Yes it did.
+
+What happens for 8G? Mempig slows to a crawl after allocating 93.49% of the 8G it is supposed to allocate. I ran out of patience waiting for it. It also takes a long for the docker run command to respond to ctrl-C at this point.
+```
+[ ~/src/github.com/ijt/mempig ] time docker run -it --rm --name mp mempig -G 8
+^C^Ccated 8035699713 of 8589934592 bytes (93.55%)
+real    5m52.719s
+user    0m4.759s
+sys     0m9.610s
+```
+
 ## Ubuntu
 
 On an Ubuntu instance on GCE with about 3G of memory, this happens:
@@ -131,6 +149,7 @@ $ gcloud compute instances create memtest2 --image=cos-73-11647-121-0 --image-pr
 rCreated [https://www.googleapis.com/compute/v1/projects/sourcegraph-server/zones/us-east1-d/instances/memtest2].
 NAME      ZONE        MACHINE\_TYPE   PREEMPTIBLE  INTERNAL\_IP  EXTERNAL\_IP   STATUS
 memtest2  us-east1-d  n1-standard-1               10.142.0.2   34.74.75.205  RUNNING
+
 $ gcloud compute ssh memtest2
 No zone specified. Using zone [us-east1-d] for instance: [memtest2].
 Warning: Permanently added 'compute.3342904289974829875' (ED25519) to the list of known hosts.
