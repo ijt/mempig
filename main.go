@@ -8,11 +8,12 @@ import (
 
 func main() {
 	G := flag.Int("G", 1, "number of gigabytes to allocate")
+	stride := flag.Int("stride", 1024, "how far apart to put the 1s to counteract lazy allocation")
 	flag.Parse()
 	bs := make([]byte, (*G)*1024*1024*1024)
 	// Set the memory to non-zero so it will actually be allocated.
 	// Apparently it's lazily allocated.
-	for i := range bs {
+	for i := 0; i < len(bs); i += *stride {
 		bs[i] = byte(1)
 	}
 	fmt.Printf("Allocated %dGiB (%d bytes)\n", *G, len(bs))
