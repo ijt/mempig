@@ -1,8 +1,9 @@
 # mempig
 Mempig's only job is to eat up your system's memory so you can find answers to questions like these:
-Does mempig get killed?
-Does the system slow to a crawl or lock up completely?
-If mempig is running in a container, does the container crash?
+
+Does mempig get killed? Not on my box.
+Does the system slow to a crawl or lock up completely? The fan runs, but it's fine.
+If mempig is running in a container, does the container crash? It sure does.
 
 On my MacBook Pro with 16G of memory, it works fine to ask for 8G:
 ```
